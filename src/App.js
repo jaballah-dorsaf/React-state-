@@ -1,90 +1,53 @@
-import React ,{useState} from "react";
+import React from "react";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import './App.css';
-import EditComp from "./components/EditComp";
-import AddComp from "./components/AddComp";
-import TodoList from "./components/TodoList";
+import Footer from "./components/Footer/Footer";
+import NavbarMenu from "./components/Navbar/NavbarMenu";
+import Login from "./components/Admin/Login";
+import Products from "./components/Acceuil/Products";
+import Admin from "./components/Admin/Admin";
+import PrivateRoute from "./components/Acceuil/PrivateRoute";
+import Home from "./components/Acceuil/Home";
+import Category from "./components/Acceuil/Category";
+import LoginRegister from "./components/Acceuil/LoginRegister";
+import Voyager from "./components/Acceuil/Voyager";
+import Apropos from "./components/Acceuil/Apropos";
+//import Log from "./components/Acceuil/Log";
+
 
 
 const App = (props) => {
-const [inputName, setInputName]= useState("");
-const [todo, setTodo] = useState([]);
-const [editMode, setEditMode] = useState(true);
-const [newTodo, setNewTodo] = useState([]);
-
-
-const handleChange = (e) => {
-  setInputName(e.target.value);
-};
-
-const handelAdd = (e) => {
-  if (inputName){
-    setTodo(todo.concat(inputName));
-  }
-  e.preventDefault();
-  setInputName("");
-};
-
-
-const handleDelete = (id) => {
-  setNewTodo({ ...newTodo, name: "" });
-  setEditMode(true);
-  return setTodo(
-    todo.filter((el, idEl) => {
-      return idEl !== id;
-    })
-  );
-};
-const handleClick = (el, i) => {
-  setNewTodo({ name: el, id: i });
-  setEditMode(false);
-};
-const handleEdit = () => {
-  setTodo(todo.map((el, i) => (i === newTodo.id ? newTodo.name : el)));
-  setEditMode(true);
-};
-
-
-  return(
+ return(
+   
+    <Router>
     <div className="App">
-<header className="App-header">
-  <div style={{
-            border: "2px solid #edf2f0",
-            backgroundColor: "#d1cfcf",
-            color: "black",
-            width: "80%",
-            padding: "20px",
-            marginTop: "10px",
-            marginBottom: "5px",
-          }}>
-<div className>
-  <h2>Create Account</h2>
-    <label>Name</label>
-    <input value={inputName}
-    onChange={(event)=>setInputName(event.target.value)}
-     placeholder="...tape your name" />
-</div>
-{editMode ? (
-          <AddComp
-            name={inputName}
-            handleChange={handleChange}
-            handelAdd={handelAdd}
+      <div className="container">
+      <NavbarMenu />
+      
+     <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/category" component={Category} />
+          <Route path="/products" component={Products} />
+          <Route path="/voyager" component={Voyager} />
+          <Route exact path="/apropos" component={Apropos} />
+          <Route path="/login" component={Login} />
+         
+          <PrivateRoute
+            exact
+            // authed={fakeAuth.isAuthenticated}
+            path="/admin"
+            component={Admin}
           />
-        ) : (
-          <EditComp
-            handleEdit={handleEdit}
-            setNewTodo={setNewTodo}
-            newTodo={newTodo}
-          />
-        )}
-
-        <TodoList
-          todo={todo}
-          handleDelete={handleDelete}
-          handleClick={handleClick}
-        />
+          <Route path="/loginregister" component={LoginRegister} />
+        </Switch>
+        
+        <br/>
+        <br/>
+        <Footer />
         </div>
-</header>
     </div>
+    </Router>
+    
   )
 }
 export default App;
